@@ -89,62 +89,18 @@ void setup()
 
 void loop()
 {
-  {// partie réception message
-    //if (MCP2515_1.MCP2515_init_Filtrage_PGN(0, 127250) != MCP2515_OK) // permet d'afficher uniquement les messages avec le PGN voulue
+  { // partie réception message
+    // if (MCP2515_1.MCP2515_init_Filtrage_PGN(0, 127250) != MCP2515_OK) // permet d'afficher uniquement les messages avec le PGN voulue
     //{
-    //  lcd.clear();
-    //  lcd.print("ERR Filtre");
-    //  while (1)
-    //    ;
-    //}
-
-    if (envoie == 0)
-    {
-      stmp[0] = 0;   // unique number assigned by manufacturer
-      stmp[1] = 0;   // unique number assigned by manufacturer
-      stmp[2] = 5;   // unique number assigned by manufacturer
-      stmp[3] = 3;   // unique number assigned by manufacturer + manufactured code
-      stmp[4] = 9;   // device instance
-      stmp[5] = 140; // device fonction
-      stmp[6] = 20;  // device classe
-      stmp[7] = 9;   // systeme instance + industry group
-
-      if (MCP2515_1.MCP2515_N2K_sendMsg(6, 60928, 7, 1, stmp) == MCP2515_OK) {
-        Serial.println(F("envoie OK   !!!!!"));
-      }
-
-      tps = millis();
-      envoie = 1;
-
-      //if (res_tmp != MCP2515_OK)
-      //{
-      //  lcd.clear();
-      //  lcd.print("Erreur envoi");
-      //  lcd.print(res_tmp);
-      //  while (1)
-      //    ;
-      //}
-    }
-
-    
+    //   lcd.clear();
+    //   lcd.print("ERR Filtre");
+    //   while (1)
+    //     ;
+    // }
 
     if (MCP2515_1.MCP2515_readMsg(ID, EXT, RTR, LEN, DATA, Buf_N) == MCP2515_OK_msg_aviable)
     {
       MCP2515_1.MCP2515_N2K_decodage_ID(ID, N2K_PRIORITE[0], N2K_PGN[0], N2K_ADRESSE[0]);
-      lcd.clear();
-
-      //lcd.setCursor(0, 0);
-      //lcd.print("  PGN : ");
-      //lcd.print(N2K_PGN[0]);
-
-      //if (N2K_PGN[0] == 127250)
-      //{
-      //  angle = (DATA[2] * 256. + DATA[1]) * 0.0057; // 256. pour spécifier que nous faisont un callul avec des doubles
-
-      //  lcd.setCursor(0, 1);
-      //  lcd.print("    data : ");
-      //  lcd.print(angle);
-      //}
 
       Serial.println("\n\nN2K_Prio | N2K_pgn | N2K_destinataire | N2K_adresse");
       Serial.print(N2K_PRIORITE[0]);
@@ -173,38 +129,7 @@ void loop()
 
       Serial.println(F("\n\n\n-----------------------------------------------"));
     }
-    //else
-    //{
-    //  lcd.clear();
-    //  lcd.setCursor(0, 0);
-    //  lcd.print("   NO MESSAGE");
-    //}
+
+    delay(100);
   }
-
-  if (millis() > tps + 1000)   while(1);
-
-  /*{ // partie envoie message (profondeur)
-
-    stmp[0] = 255; // Sequence ID (une seule trame donc 255)
-    stmp[1] = 40;  // Water Depth, Transducer(distance entre le sonnar et le fond, MSB et LSB inversé)
-    stmp[2] = 8;   // Water Depth, Transducer
-    stmp[3] = 1;   // Water Depth, Transducer
-    stmp[4] = 0;   // Water Depth, Transducer
-    stmp[5] = 0;   // Offset (distance entre la ligne de flotaison et le sonnar)
-    stmp[6] = 0;   // Offset
-    stmp[7] = 252; // Maximum Depth Range (valeure max du capteur)
-
-    res_tmp = MCP2515_1.MCP2515_N2K_sendMsg(6, 128267, 0, 0, stmp);
-
-    if (res_tmp != MCP2515_OK)
-    {
-      lcd.clear();
-      lcd.print("Erreur envoi");
-      lcd.print(res_tmp);
-      while (1)
-        ;
-    }
-  }*/
-
-  //delay(100);
 }
